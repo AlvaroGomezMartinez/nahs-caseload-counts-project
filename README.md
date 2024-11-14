@@ -1,0 +1,5 @@
+# NAHS CASELOAD/COUNTS 2024-2025 PROJECT
+## Northside ISD<br>Northside Alternative High School<br><Department of Academic Technology>
+<b>Teacher requesting this feature:</b> [Linda Rodriguez](mailto:linda.rodriguez@nisd.net)<br>
+<b>Script Author and point of contact:</b> [Alvaro Gomez](mailto:alvaro.gomez@nisd)<br><b>Office:</b> 1-210-397-9408<br><b>Mobile:</b> 1-210-363-1577<br><br>
+<b>Purpose:</b> This project provides a list of students enrolled at NAHS to the students' home campus special education campus and department coordinators. The data is found in a Google Sheet that is maintained by the NAHS special education department coordinator. This project produces a webapp that only authorized viewers can access. Once an authorized user visits the site, the script filters the data and provides them a list of students from their campus.

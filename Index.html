@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+
+      /* Spinner styling */
+      #loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100px;
+      }
+      .spinner {
+        border: 8px solid #f3f3f3;
+        border-top: 8px solid #3498db;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+  </head>
+  <body>
+    <h2>NAHS CASELOAD/COUNTS 2024-2025</h2>
+    <div id="loading">
+      <div class="spinner"></div>
+      <p>Loading data, please wait...</p>
+    </div>
+    <div id="data-table" style="display: none;"></div>
+    </div id="legend">
+    <br>*RESET/COMPASS
+    </div>
+
+    <script>
+      // Show loading spinner, hide table initially
+      function loadFilteredData() {
+        document.getElementById('loading').style.display = 'flex';
+        document.getElementById('data-table').style.display = 'none';
+
+        google.script.run
+          .withSuccessHandler(displayData)
+          .withFailureHandler(function(error) {
+            console.error("Error loading data:", error.message);
+            document.getElementById('data-table').innerHTML = "<p>Error loading data.</p>";
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('data-table').style.display = 'block';
+          })
+          .filterCaseloadData();
+      }
+
+      // Display the data in an HTML table
+      function displayData(data) {
+        // Hide loading spinner when data is ready
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('data-table').style.display = 'block';
+
+        console.log("Data received by client: ", data);
+
+        // Parse JSON if needed
+        if (typeof data === 'string') {
+          try {
+            data = JSON.parse(data);
+          } catch (error) {
+            console.error("Error parsing JSON data:", error.message);
+            document.getElementById('data-table').innerHTML = "<p>Error parsing data.</p>";
+            return;
+          }
+        }
+
+        if (!data || data.length === 0) {
+          document.getElementById('data-table').innerHTML = "<p>No data available for your campus.</p>";
+          return;
+        }
+
+        let tableHtml = '<table><tr>';
+        data[0].forEach(header => tableHtml += `<th>${header}</th>`);
+        tableHtml += '</tr>';
+
+        data.slice(1).forEach(row => {
+          tableHtml += '<tr>';
+          row.forEach(cell => tableHtml += `<td>${cell}</td>`);
+          tableHtml += '</tr>';
+        });
+
+        tableHtml += '</table>';
+        document.getElementById('data-table').innerHTML = tableHtml;
+      }
+
+      // Run the function on page load
+      window.onload = loadFilteredData;
+    </script>
+
+  </body>
+</html>
